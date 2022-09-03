@@ -9,6 +9,7 @@ public class PlayerShooting : MonoBehaviour
 	[SerializeField] private float shootPower = 10f;
 	[SerializeField] private GameObject shotPrefab;
 	[SerializeField] private Transform gunPoint;
+	[SerializeField] private float m_shotAnimationTime = .2f;
 	private Animator animator;
 	private void Start() {
 		animator = GetComponent<Animator>();
@@ -17,8 +18,9 @@ public class PlayerShooting : MonoBehaviour
 		if (context.started) {
 			animator.SetTrigger("Shoot");
 			GameObject newBullet = Instantiate(shotPrefab, gunPoint.position, gunPoint.rotation) as GameObject;
-			newBullet.GetComponent<Rigidbody2D>().AddForce(gunPoint.forward * shootPower);
-			Destroy(newBullet, .2f);
+			newBullet.transform.SetParent(gameObject.transform);
+			//newBullet.GetComponent<Rigidbody2D>().AddForce(gunPoint.forward * shootPower);
+			Destroy(newBullet, m_shotAnimationTime);
 		}
 	}
 }

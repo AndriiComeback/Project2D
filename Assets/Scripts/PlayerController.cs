@@ -39,29 +39,26 @@ public class PlayerController : MonoBehaviour
 			jumpState = JumpState.Fullspeed;
 		}
 		if (jumpState == JumpState.Fullspeed && rb.velocity.y < m_startRollingSpeedCap) {
+			animator.SetTrigger("Roll");
 			jumpState = JumpState.Rolling;
-			animator.SetBool("IsMovingUp", false);
-			animator.SetBool("IsRolling", true);
 		}
 		if (jumpState == JumpState.Rolling && rb.velocity.y < m_startFallingSpeedCap) {
+			animator.SetTrigger("Fall");
 			jumpState = JumpState.Falling;
-			animator.SetBool("IsRolling", false);
-			animator.SetBool("IsFalling", true);
 		}
 	}
 
 	public void OnLanding() {
+		if (jumpState != JumpState.None) {
+			animator.SetTrigger("Land");
+		}
 		jumpState = JumpState.None;
-		animator.SetBool("IsJumping", false);
-		animator.SetBool("IsFalling", false);
-		animator.SetBool("IsMovingUp", false);
-		animator.SetBool("IsRolling", false);
 	}
 
 	public void OnLeaveGround() {
-		if (rb.velocity.y < .01f) {
-			animator.SetBool("IsJumping", true);
-			animator.SetBool("IsFalling", true);
+		if (jumpState == JumpState.None) {
+			animator.SetTrigger("Fall");
+			jumpState = JumpState.Falling;
 		}
 	}
 
@@ -72,11 +69,10 @@ public class PlayerController : MonoBehaviour
 	}
 	public void OnJump(InputAction.CallbackContext context) {
 		if (context.started) {
-			if (!animator.GetBool("IsJumping")) {
+			if (jumpState == JumpState.None) {
 				jump = true;
 				jumpState = JumpState.Accelerating;
-				animator.SetBool("IsJumping", true);
-				animator.SetBool("IsMovingUp", true);
+				animator.SetTrigger("Jump");
 			}
 		}
 	}
