@@ -17,4 +17,11 @@ public class AnimationController : MonoBehaviour
 	public void SetAnimationParameter(string animationName) {
 		animator.SetTrigger(animationName);
 	}
+    public void ResetAllTriggers() {
+        foreach (var parameter in animator.parameters) {
+            if (parameter.type == AnimatorControllerParameterType.Trigger) {
+                animator.ResetTrigger(parameter.name);
+            }
+        }
+    }
 }
