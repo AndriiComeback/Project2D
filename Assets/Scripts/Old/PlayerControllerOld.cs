@@ -8,7 +8,7 @@ public enum JumpState { None, Accelerating, Fullspeed, Rolling, Falling, Climbin
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class PlayerController : MonoBehaviour
+public class PlayerControllerOld : MonoBehaviour
 {
 	[SerializeField] private float m_horizontalMoveSpeed = 80f;
 	[SerializeField] private float m_stopAcceleratingSpeedCap = 5f;
@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
 	private bool jump = false;
 	private JumpState jumpState = JumpState.None;
 	[Header("-----Shooting-----")]
-	[SerializeField] private float shootPower = 10f;
 	[SerializeField] private GameObject shotPrefab;
 	[SerializeField] private Transform gunPoint;
 	[SerializeField] private Transform backGunPoint;
@@ -45,7 +44,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	private void FixedUpdate() {
-		if (Mathf.Abs(rb.velocity.y) < .01f && characterController.IsTopWallEnded) {
+		if (Mathf.Abs(rb.velocity.y) < .01f && (characterController.IsTopWallEnded || characterController.IsCeilingCheck)) {
 			verticalMove = Mathf.Clamp(verticalMove, float.MinValue, 0f);
 		}
 		animator.SetFloat("ClimbSpeed", verticalMove);

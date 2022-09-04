@@ -7,24 +7,31 @@ public class Destructable : MonoBehaviour
     [SerializeField] private int maxHealth;
     private int health;
 
+    [SerializeField] private GameObject deathFx;
+
     private void Awake() {
         health = maxHealth;
 	}
-    private void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.otherCollider.CompareTag("Damager")) {
-            Damager damager = collision.otherCollider.GetComponent<Damager>();
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag("Damager")) {
+            Damager damager = collision.gameObject.GetComponent<Damager>();
             if (damager != null) {
-                TakeDamage(damager.Damage);
-            }
+				TakeDamage(damager.Damage);
+			}
 		}
-    }
+	}
 
     private void TakeDamage(int value) {
         health -= value;
         if (health <= 0) {
             health = 0;
-            Debug.Log("DIED!");
-            // to do - Die
+            Destroy(gameObject);
 		}
 	}
+    private void OnDestroy() {
+        GameObject fx = Instantiate(deathFx, transform.position, transform.rotation);
+        fx.transform.parent = null;
+        Destroy(fx, .5f);
+    }
 }

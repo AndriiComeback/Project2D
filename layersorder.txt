@@ -1,0 +1,7 @@
+900 - frontground tiles
+300 - ground tiles
+200 - player
+199 - player shot
+190 - enemies
+189 - enemy shot
+10 - background tiles
