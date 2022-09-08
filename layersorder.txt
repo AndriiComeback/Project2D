@@ -2,6 +2,9 @@
 300 - ground tiles
 200 - player
 199 - player shot
+198 - power up
 190 - enemies
 189 - enemy shot
 10 - background tiles
+1 - paralax midground
+0 - back ground

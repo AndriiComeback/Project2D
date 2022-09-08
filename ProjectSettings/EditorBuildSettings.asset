@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/PlayerTest.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/RoomTest.unity
     guid: 22fe5d051f64cb14390f2244d4802935
+  - enabled: 1
+    path: Assets/Scenes/Level01.unity
+    guid: c1459001a7229de42be64191b210dacb
   m_configObjects: {}
