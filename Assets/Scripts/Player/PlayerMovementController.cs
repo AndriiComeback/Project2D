@@ -26,6 +26,7 @@ public class PlayerMovementController : MonoBehaviour
 	public bool IsClimbing { get { return _isClimbing; } }
 	public bool IsCrouching { private set; get; }
 	public float HurtTime { get { return hurtTime; } }
+	public bool IsFacingRight { get { return _isFacingRight; } }
 
 	[Header("======Base parameters======")]
 	[SerializeField] private Transform _groundCheck;
