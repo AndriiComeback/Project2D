@@ -5,6 +5,38 @@
 198 - power up
 190 - enemies
 189 - enemy shot
+179 - interactable objects
 10 - background tiles
 1 - paralax midground
 0 - back ground
+
+
+===Player===
+Idle
+Run
+Run Shoot
+Shoot
+Jump
+Fall
+Climb idle
+Climb
+Climb down
+Climb shoot
+Die
+Shoot up
+
+===Player unlock power ups===
+shoot laser
+climb
+
+===Player side power ups===
+more hp
+more ammo capacity
+
+==Player collectables===
+hp
+max hp
+ammo
+max ammo
+
+===Player iteractables===
