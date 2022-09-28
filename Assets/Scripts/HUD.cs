@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameController;
 
 public class HUD : MonoBehaviour {
 	public TMPro.TMP_Text scoreLabel;
 	public Slider HealthBar;
 	public static HUD Instance { private set; get; }
 	[SerializeField] GameObject inventoryWindow;
-	[SerializeField] InventoryItem inventoryItemPrefab;
+	[SerializeField] InventoryUIButton inventoryItemPrefab;
 	[SerializeField] Transform inventoryContainer;
 	[SerializeField] GameObject LevelWonWindow;
 	private void Awake() {
 		Instance = this;
+		LoadInventory();
 	}
 	public void SetScore(string scoreValue) {
 		scoreLabel.text = scoreValue;
@@ -26,11 +28,10 @@ public class HUD : MonoBehaviour {
 		window.GetComponent<Animator>().SetBool("Open", false);
 		GameController.Instance.State = GameState.Play;
 	}
-	public InventoryItem AddNewInventoryItem(CrystallType crystallType, int amount) {
-		InventoryItem newItem = Instantiate(inventoryItemPrefab) as InventoryItem;
+	public InventoryUIButton AddNewInventoryItem(InventoryItem itemData) {
+		InventoryUIButton newItem = Instantiate(inventoryItemPrefab) as InventoryUIButton;
 		newItem.transform.SetParent(inventoryContainer);
-		newItem.Quantity = amount;
-		newItem.CrystallType = crystallType;
+		newItem.ItemData = itemData;
 		return newItem;
 	}
 	public void ButtonNext() {
@@ -44,6 +45,22 @@ public class HUD : MonoBehaviour {
 	}
 	public void ShowLevelWonWindow() {
 		ShowWindow(LevelWonWindow);
+	}
+	public void LoadInventory() {
+		InventoryUsedCallback callback = new
+		InventoryUsedCallback(GameController.Instance.InventoryItemUsed);
+		for (int i = 0; i < GameController.Instance.Inventory.Count; i++) {
+			InventoryUIButton newItem =
+		   AddNewInventoryItem(GameController.Instance.Inventory[i]);
+
+			newItem.Callback = callback;
+		}
+	}
+	public void SetSoundVolume(Slider slider) {
+		GameController.Instance.AudioManager.SfxVolume = slider.value;
+	}
+	public void SetMusicVolume(Slider slider) {
+		GameController.Instance.AudioManager.MusicVolume = slider.value;
 	}
 }
 

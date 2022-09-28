@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 2452564086717506964}
   - component: {fileID: 2452564086717506965}
   - component: {fileID: 2452564086717506966}
-  - component: {fileID: 8726699255127603987}
+  - component: {fileID: 447701000184753816}
   m_Layer: 5
   m_Name: Inventory Item
   m_TagString: Untagged
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8726699255127603987
+--- !u!114 &447701000184753816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,18 +269,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 2452564086717506984}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da1e56463542f04aa39e06c668e1480, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c99878f3683ffe478e440842e7bbebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crystallType: 0
-  quantity: 2
+  itemData:
+    crystallType: 0
+    quantity: 0
   image: {fileID: 2452564086766768901}
   label: {fileID: 2452564086074578042}
   count: {fileID: 2452564086816982218}
   sprites:
-  - {fileID: 21300000, guid: 1672b2f641e214522a3f4685e179a787, type: 3}
-  - {fileID: 21300000, guid: 1cafae377352e4777bf22d10ddbf1be0, type: 3}
   - {fileID: 21300000, guid: 2b335573df80049ccb85e3ce21e9706e, type: 3}
+  - {fileID: 21300000, guid: 1cafae377352e4777bf22d10ddbf1be0, type: 3}
+  - {fileID: 21300000, guid: 1672b2f641e214522a3f4685e179a787, type: 3}
 --- !u!1 &2452564086766768903
 GameObject:
   m_ObjectHideFlags: 0

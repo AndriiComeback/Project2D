@@ -19,6 +19,7 @@ public class CharacterJumpingState : CharacterState {
 
 		characterController.anim.SetAnimationParameter("IsInAir", true);
 		characterController.anim.SetAnimationParameter("IsJumping", true);
+		GameController.Instance.AudioManager.PlaySound("DM-CGS-46");
 
 		grounded = false;
 	}

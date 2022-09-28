@@ -1,11 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public enum GameState { Play, Pause }
 public class GameController : MonoBehaviour {
-	static private GameController instance;
-	public static GameController Instance { get { return instance; } }
+	static private GameController _instance;
+	public static GameController Instance {
+		get {
+			if (_instance == null) {
+				GameObject gameController =
+				Instantiate(Resources.Load("Prefabs/GameController")) as GameObject;
+				_instance = gameController.GetComponent<GameController>();
+			}
+			return _instance;
+		}
+	}
 	public GameState state;
 	public GameState State {
 		get {
@@ -32,14 +42,26 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
-	private List<InventoryItem> inventory;
 
-	public delegate void InventoryUsedCallback(InventoryItem item);
+	[SerializeField] private List<InventoryItem> inventory;
+	public List<InventoryItem> Inventory { get { return inventory; } set { inventory = value; } }
+	[SerializeField] Audio audioManager;
+	public Audio AudioManager { set { audioManager = value; } get { return audioManager; } }
+
+	public delegate void InventoryUsedCallback(InventoryUIButton item);
 	private void Awake() {
-		instance = this;
-		state = GameState.Play;
+		if (_instance == null) {
+			_instance = this;
+		} else {
+			if (_instance != this) {
+				Destroy(gameObject);
+			}
+		}
+		DontDestroyOnLoad(gameObject);
+		State = GameState.Play;
 		inventory = new List<InventoryItem>();
 		Time.timeScale = 1.0f;
+		InitializeAudioManager();
 	}
 	private void OnEnable() {
 		//HUD.Instance.HealthBar.maxValue = 5;
@@ -58,14 +80,14 @@ public class GameController : MonoBehaviour {
 			HUD.Instance.HealthBar.value = victim.Health;
 		}
 	}
-	public void AddNewInventoryItem(CrystallType type, int amount) {
-		InventoryItem newItem = HUD.Instance.AddNewInventoryItem(type, amount);
+	public void AddNewInventoryItem(InventoryItem itemData) {
+		InventoryUIButton newUiButton = HUD.Instance.AddNewInventoryItem(itemData);
 		InventoryUsedCallback callback = new InventoryUsedCallback(InventoryItemUsed);
-		newItem.Callback = callback;
-		inventory.Add(newItem);
+		newUiButton.Callback = callback;
+		inventory.Add(itemData);
 	}
-	public void InventoryItemUsed(InventoryItem item) {
-		switch (item.CrystallType) {
+	public void InventoryItemUsed(InventoryUIButton item) {
+		switch (item.itemData.crystallType) {
 			case CrystallType.Blue:
 			break;
 			case CrystallType.Red:
@@ -76,7 +98,7 @@ public class GameController : MonoBehaviour {
 			Debug.LogError("Wrong crystall type!");
 			break;
 		}
-		inventory.Remove(item);
+		inventory.Remove(item.itemData);
 		Destroy(item.gameObject);
 	}
 	public void LoadNextLevel() {
@@ -91,5 +113,15 @@ public class GameController : MonoBehaviour {
 	}
 	public void PrincessFound() {
 		HUD.Instance.ShowLevelWonWindow();
+	}
+	private void InitializeAudioManager() {
+		audioManager.SourceSFX = gameObject.AddComponent<AudioSource>();
+		audioManager.SourceMusic = gameObject.AddComponent<AudioSource>();
+		audioManager.SourceRandomPitchSFX = gameObject.AddComponent<AudioSource>();
+		gameObject.AddComponent<AudioListener>();
+		Scene scene = SceneManager.GetActiveScene();
+		if (!Equals(scene.name, "MainMenu")) {
+			GameController.Instance.AudioManager.PlayMusic(false);
+		}
 	}
 }
