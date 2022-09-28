@@ -15,8 +15,8 @@ public class CharacterGroundedState : CharacterState {
 		horizontalMoveAction.Enable();
 		jumpAction.Enable();
 
+		characterController.SetGravityScale();
 		characterController.OnGroundMovementReset();
-		characterController.SetMovementY(false);
 
 		characterController.anim.SetAnimationParameter("IsInAir", false);
 		characterController.anim.SetAnimationParameter("IsJumping", false);
@@ -31,6 +31,9 @@ public class CharacterGroundedState : CharacterState {
 		base.HandleInput();
 		if (jumpAction.inProgress) {
 			stateMachine.ChangeState(characterController.jumping);
+		}
+		if (shootAction.inProgress) {
+			characterController.Shoot();
 		}
 	}
 

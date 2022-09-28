@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.TextCore.Text;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AnimationController))]
-public class CharacterController : MonoBehaviour {
+public class CharacterController : MonoBehaviour, IDestructable {
 	private const float GROUNDED_RADIUS = .05f;
 
 	public CharacterStateMachine movementSM;
@@ -22,8 +19,15 @@ public class CharacterController : MonoBehaviour {
 	[SerializeField] protected Transform leftGroundCheck;
 	[SerializeField] protected Transform rightGroundCheck;
 	[SerializeField] private LayerMask whatIsGround;
+	[SerializeField] private LayerMask whatIsPlatform;
+
+	[SerializeField] private GameObject shot;
 
 	[HideInInspector] public PlayerControls playerControls;
+
+	private int health = 5;
+
+	public int Health { get { return health; } }
 
 	private void Awake() {
 		rb = GetComponent<Rigidbody2D>();
@@ -57,10 +61,14 @@ public class CharacterController : MonoBehaviour {
 		}
 		rb.velocity = new Vector2(horizontalMove * data.horizontalSpeed, rb.velocity.y);
 	}
-	public bool GetIfGrounded() {
-		return GetIfPointIsGrounded(leftGroundCheck) || GetIfPointIsGrounded(rightGroundCheck);
+	public bool GetIfGrounded(bool ignorePlatforms = false) {
+		LayerMask mask = whatIsGround;
+		if (!ignorePlatforms) {
+			mask = whatIsGround | whatIsPlatform;
+		}
+		return GetIfPointIsGrounded(leftGroundCheck, mask) || GetIfPointIsGrounded(rightGroundCheck, mask);
 	}
-	protected bool GetIfPointIsGrounded(Transform point) {
+	protected bool GetIfPointIsGrounded(Transform point, LayerMask whatIsGround) {
 		bool isGrounded = false;
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, GROUNDED_RADIUS, whatIsGround);
 		for (int i = 0; i < colliders.Length; i++) {
@@ -69,13 +77,6 @@ public class CharacterController : MonoBehaviour {
 			}
 		}
 		return isGrounded;
-	}
-	public void SetMovementY(bool isAllowed) {
-		if (isAllowed) {
-			rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-		} else {
-			rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
-		}
 	}
 	public void Jump(bool zeroX = false) {
 		rb.transform.Translate(Vector2.up * (GROUNDED_RADIUS + 0.1f));
@@ -90,6 +91,17 @@ public class CharacterController : MonoBehaviour {
 		bool isGrounded = GetIfGrounded();
 		return !isGrounded && rb.velocity.y < 0;
 	}
+	public void SetGravityScale(bool falling = false) {
+		rb.gravityScale = falling ? 6 : data.gravityScale;
+	}
+	public void Shoot() {
+		StartCoroutine(ActivateShot());
+	}
+	private IEnumerator ActivateShot() {
+		shot.SetActive(true);
+		yield return new WaitForSeconds(0.22f);
+		shot.SetActive(false);
+	}
 	protected void Flip() {
 		isFacingRight = !isFacingRight;
 		transform.Rotate(0f, 180f, 0f);
@@ -99,5 +111,18 @@ public class CharacterController : MonoBehaviour {
 		Gizmos.color = Color.green;
 		Gizmos.DrawSphere(leftGroundCheck.position, GROUNDED_RADIUS);
 		Gizmos.DrawSphere(rightGroundCheck.position, GROUNDED_RADIUS);
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision) {
+		if (collision.gameObject.layer == 8) { // enemy
+			//Hit(1);
+		}
+	}
+	public void Hit(int damage) {
+		health -= damage;
+		GameController.Instance.Hit(this);
+		if (health <= 0) {
+			gameObject.SetActive(false);
+		}
 	}
 }

@@ -14,8 +14,7 @@ public class CharacterFallingState : CharacterState {
 
 		jumpAction.Disable();
 
-		characterController.SetMovementY(true);
-
+		characterController.SetGravityScale(true);
 		characterController.anim.SetAnimationParameter("IsInAir", true);
 		characterController.anim.SetAnimationParameter("IsJumping", false);
 
@@ -33,7 +32,6 @@ public class CharacterFallingState : CharacterState {
 		grounded = characterController.GetIfGrounded();
 		if (grounded) {
 			stateMachine.ChangeState(characterController.grounded);
-			characterController.SetMovementY(false);
 		}
 	}
 }

@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27e9c1ef44f4b8344b4cfb1ea2c0af60, type: 3}
   m_Name: CharacterControllerData
   m_EditorClassIdentifier: 
-  horizontalSpeed: 10
-  jumpForce: 13
+  horizontalSpeed: 8
+  jumpForce: 18
+  gravityScale: 4

@@ -15,7 +15,6 @@ public class CharacterJumpingState : CharacterState {
 
 		jumpAction.Disable();
 
-		characterController.SetMovementY(true);
 		characterController.Jump();
 
 		characterController.anim.SetAnimationParameter("IsInAir", true);
@@ -32,10 +31,9 @@ public class CharacterJumpingState : CharacterState {
 		base.PhysicsUpdate();
 		characterController.Move(horizontalMoveAction.ReadValue<float>());
 
-		grounded = characterController.GetIfGrounded();
+		grounded = characterController.GetIfGrounded(ignorePlatforms: true);
 		if (grounded) {
 			stateMachine.ChangeState(characterController.grounded);
-			characterController.SetMovementY(false);
 		}
 		bool isFalling = characterController.GetIfIsFalling();
 		if (isFalling) {

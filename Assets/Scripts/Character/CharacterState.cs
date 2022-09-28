@@ -9,6 +9,7 @@ public abstract class CharacterState {
 
 	public InputAction horizontalMoveAction;
 	public InputAction jumpAction;
+	public InputAction shootAction;
 
 	protected CharacterState(CharacterController characterController, CharacterStateMachine stateMachine) {
 		this.characterController = characterController;
@@ -17,6 +18,7 @@ public abstract class CharacterState {
 		characterController.playerControls.Enable();
 		horizontalMoveAction = characterController.playerControls.CharacterControls.HorizontalMove;
 		jumpAction = characterController.playerControls.CharacterControls.Jump;
+		shootAction = characterController.playerControls.CharacterControls.Shoot;
 	}
 
 	public virtual void Enter() {
